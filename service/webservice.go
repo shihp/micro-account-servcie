@@ -6,7 +6,7 @@ import (
 )
 
 func StartWebServer(port string) {
-	//todo 先注册路由
+	//先注册路由
 	r := NewRouter()
 	http.Handle("/", r)
 

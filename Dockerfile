@@ -6,8 +6,4 @@ ADD healthchecker-linux-amd64 /
 
 HEALTHCHECK --interval=3s --timeout=3s CMD ["./healthchecker-linux-amd64", "-port=6767"] || exit 1
 
-
-ENTRYPOINT ["./accountservice-linux-amd64"]
-
-
-
+ENTRYPOINT ["./accountservice-linux-amd64", "-configServerUrl=http://192.168.99.100:8888", "-profile=test", "-configBranch=P8"]

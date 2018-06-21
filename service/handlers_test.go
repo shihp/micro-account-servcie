@@ -8,9 +8,21 @@ import (
 	"micro-account-service/model"
 	"fmt"
 	"encoding/json"
+	"gopkg.in/h2non/gock.v1"
 )
 
+func init() {
+	gock.InterceptClient(client)
+}
+
 func TestGetAccount(t *testing.T) {
+	defer gock.Off()
+	gock.New("http://quotes-service:8080").
+		Get("/api/quote").
+		MatchParam("strength", "4").
+		Reply(200).
+		BodyString(`{"quote":"May the source be with you. Always.","ipAddress":"10.0.0.5:8080","language":"en"}`)
+
 	mockRepo := &dbclient.MockBoltClient{}
 
 	mockRepo.On("QueryAccount", "123").Return(model.Account{Id: "123", Name: "Person_123"}, nil)
@@ -31,6 +43,8 @@ func TestGetAccount(t *testing.T) {
 				json.Unmarshal(resp.Body.Bytes(), &account)
 				So(account.Id, ShouldEqual, "123")
 				So(account.Name, ShouldEqual, "Person_123")
+
+				So(account.Quote.Text, ShouldEqual, "May the source be with you. Always.")
 			})
 		})
 	})
