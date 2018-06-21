@@ -40,6 +40,7 @@ func parseConfiguration(body []byte) {
 		viper.Set(key, value)
 		fmt.Printf("Loading config property %v => %v\n", key, value)
 	}
+
 	if viper.IsSet("server_name") {
 		fmt.Printf("Successfully loaded configuration for service %s\n", viper.GetString("server_name"))
 	}

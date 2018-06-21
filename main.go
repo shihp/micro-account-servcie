@@ -5,7 +5,7 @@ import (
 	"micro-account-service/service"
 	"micro-account-service/dbclient"
 	"flag"
-	"src/github.com/spf13/viper"
+	"github.com/spf13/viper"
 	"micro-account-service/config"
 )
 
@@ -13,8 +13,8 @@ var appName = "accountservice"
 
 func init() {
 	profile := flag.String("profile", "test", "Environment profile, something similar to spring profiles")
-	configServerUrl := flag.String("configServerUrl", "http://configserver:8888", "Address to config server")
-	configBranch := flag.String("configBranch", "master", "git branch to fetch configuration from")
+	configServerUrl := flag.String("configServerUrl", "http://192.168.99.100:8888", "Address to config server")
+	configBranch := flag.String("configBranch", "P8", "git branch to fetch configuration from")
 
 	flag.Parse()
 
@@ -33,8 +33,11 @@ func main() {
 		appName,
 		viper.GetString("profile"),
 		viper.GetString("configBranch"))
-	initializeBoltClient()
+
 	go config.StartListener(appName, viper.GetString("amqp_server_url"), viper.GetString("config_event_bus"))
+
+	initializeBoltClient()
+
 	service.StartWebServer(viper.GetString("server_port"))
 }
 
